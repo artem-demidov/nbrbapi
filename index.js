@@ -1,14 +1,5 @@
-var NbrbAPI = require('./lib/nbrbapi');
+module.exports = require("./lib/nbrbapi");
 
-var api = new NbrbAPI(null, "http");
-
-api.setParameters({'curID':'298', 'startDate': '2017-6-1','endDate': '2017-7-30'});
-//api.setParameters({'periodicity':0});
-//api.setParameters({'curName': 'USD'});
-api.request('dynamicrates', function (error, result) {
-    if (error) {
-        console.log(error);
-    } else {
-        console.log(result);
-    }
-});
+module.exports.rates        = require("./lib/request/rates");
+module.exports.dynamicrates = require("./lib/request/dynamicrates");
+module.exports.currencies   = require("./lib/request/currencies");
