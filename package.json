@@ -4,22 +4,21 @@
   "description": "",
   "main": "index",
   "repository": {
-    "type":"git",
+    "type": "git",
     "url": "https://github.com/artem-demidov/nbrbapi"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha ./tests/unittests.js"
+  },
   "keywords": [],
   "author": {
-    "name" : "Artem Demidov",
+    "name": "Artem Demidov",
     "email": "artem.demidov88@gmail.com"
   },
   "license": "ISC",
   "devDependencies": {
-    "chai"  : "^3.5.0",
-    "mocha" : "^2.5.4",
-    "nock"  : "^7.2.1"
-  },
-  "dependencies": {
-
+    "chai": "^3.5.0",
+    "mock": "^0.1.1",
+    "nock": "^7.7.3"
   }
 }
