@@ -267,3 +267,236 @@ describe("Rates Endpoint By Text Code", function() {
         });
     });
 });
+
+describe("Rates Endpoint By Text Code", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("/USD?ParamMode=2")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully calls the rates endpoint", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'curName':'USD', 'ParamMode': '2'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing curName parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+describe("List Of Daily Rates", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("?Periodicity=0")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully call the list of daily rates", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'periodicity': '0'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing periodicity parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+describe("Currency Rate On Some Day", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("/298?onDate=2017-7-6")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully call the currency date on some day", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'curID': '298','onDate':'2017-7-6'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing curID parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'onDate':'2017-7-6'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+
+    it("detects missing curID and onDate parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+
+
+/*describe("List Of Daily Rates For Some Day", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("?onDate=2017-7-6&Periodicity=0")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully call the list of daily rates on some day", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'onDate': '2017-7-6', 'periodicity': '0'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing periodicity parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'onDate': '2017-7-6'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+
+    it("detects missing onDate and periodicity parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+describe("List Of Monthly Rates For Some Day", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("?onDate=2017-7-6&Periodicity=1")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully call the list of monthly rates on some day", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'onDate': '2017-7-6', 'periodicity': '1'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing periodicity parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+
+    it("detects missing onDate and periodicity parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});*/
+
