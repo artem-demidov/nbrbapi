@@ -150,16 +150,120 @@ describe("Dynamicrates Endpoint", function() {
     });
 });
 
-describe("Rates Endpoint", function() {
+describe("Rates Endpoint By Internal Code", function() {
     beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("/145")
+            .reply(200, JSON.parse(mockResponse));
+
         done();
     });
 
     afterEach(function(done){
-       done();
+        nock.cleanAll();
+        done();
     });
 
     it("successfully calls the rates endpoint", function(done) {
-       done();
+        var api = new NbrbApi();
+
+        api.setParameters({'curID':'145'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing curID parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+describe("Rates Endpoint By Digital Code", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("/840?ParamMode=1")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully calls the rates endpoint", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'curISO':'840', 'ParamMode': '1'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing curISO parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'ParamMode': '1'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
+    });
+});
+
+describe("Rates Endpoint By Text Code", function() {
+    beforeEach(function(done){
+        var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
+
+        nock("http://www.nbrb.by/API/ExRates/Rates")
+            .get("/USD?ParamMode=2")
+            .reply(200, JSON.parse(mockResponse));
+
+        done();
+    });
+
+    afterEach(function(done){
+        nock.cleanAll();
+        done();
+    });
+
+    it("successfully calls the rates endpoint", function(done) {
+        var api = new NbrbApi();
+
+        api.setParameters({'curName':'USD', 'ParamMode': '2'});
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.be.null;
+            chai.expect(res.name).to.equal("Nbrb API");
+            done();
+        });
+    });
+
+    it("detects missing curName parameter", function(done) {
+        var api = new NbrbApi();
+
+        api.request('rates', function(err, res) {
+            chai.expect(err).to.not.be.null;
+            chai.expect(err.name).to.equal("NbrbException");
+            chai.expect(err.message).to.contain('badArgument');
+            done();
+        });
     });
 });
