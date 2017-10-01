@@ -399,7 +399,7 @@ describe("Currency Rate On Some Day", function() {
 
 
 
-/*describe("List Of Daily Rates For Some Day", function() {
+describe("List Of Daily Rates For Some Day", function() {
     beforeEach(function(done){
         var mockResponse = JSON.stringify({'name': 'Nbrb API', 'versionChecked': true});
 
@@ -498,5 +498,5 @@ describe("List Of Monthly Rates For Some Day", function() {
             done();
         });
     });
-});*/
+});
 
