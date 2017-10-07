@@ -19,4 +19,4 @@ api.request("currencies", function(err, res){
 See [examples](examples).
 
 ## API Documentation
-See [documentation](https://github.com/artem-demidov/nbrbapi)
+See [documentation](http://www.nbrb.by/APIHelp/ExRates)
