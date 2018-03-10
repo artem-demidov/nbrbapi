@@ -1,6 +1,6 @@
 # nbrbapi
 
-This is the Nbrb API client binding for node.js.
+This is the Nbrb API client binding for node.js for work with National Bank o Belarus currency information.
 
 ## Example using the Nbrb API language detection endpoint
 ```javascript
